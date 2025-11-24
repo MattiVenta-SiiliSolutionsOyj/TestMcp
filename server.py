@@ -1,9 +1,13 @@
 """
 Tata MCP Server - A simple MCP server using FastMCP
-Returns 'terve Maailma' when tata tool is called
+Demonstrates various MCP tool capabilities
 """
 
 from fastmcp import FastMCP
+from typing import List, Dict
+import json
+import urllib.request
+import urllib.error
 
 # Create FastMCP server instance
 mcp = FastMCP("tata-mcp-server")
@@ -27,6 +31,132 @@ def universal(value: str) -> str:
         The value repeated 10 times with '****' as separator
     """
     return "****".join([value] * 10)
+
+
+@mcp.tool()
+def calculate(operation: str, a: float, b: float) -> str:
+    """
+    Perform basic mathematical operations
+
+    Args:
+        operation: The operation to perform (add, subtract, multiply, divide)
+        a: First number
+        b: Second number
+
+    Returns:
+        Result of the calculation
+    """
+    operations = {
+        "add": a + b,
+        "subtract": a - b,
+        "multiply": a * b,
+        "divide": a / b if b != 0 else "Error: Division by zero"
+    }
+
+    result = operations.get(operation.lower(), "Error: Unknown operation")
+    return f"{operation}({a}, {b}) = {result}"
+
+
+@mcp.tool()
+def get_info(category: str) -> str:
+    """
+    Get information about different categories
+
+    Args:
+        category: Category to get info about (server, tools, mcp)
+
+    Returns:
+        Information about the requested category
+    """
+    info = {
+        "server": "FastMCP server running on Python with SSE transport",
+        "tools": "This server provides: tata, universal, calculate, get_info, list_items, and format_data tools",
+        "mcp": "Model Context Protocol - A protocol for communication between AI models and tools"
+    }
+
+    return info.get(category.lower(), f"No information available for category: {category}")
+
+
+@mcp.tool()
+def list_items(items: List[str], separator: str = ", ") -> str:
+    """
+    Format a list of items with a custom separator
+
+    Args:
+        items: List of items to format
+        separator: Separator to use between items (default: ", ")
+
+    Returns:
+        Formatted string of items
+    """
+    return separator.join(items)
+
+
+@mcp.tool()
+def format_data(data: Dict[str, str], format_type: str = "json") -> str:
+    """
+    Format dictionary data in different formats
+
+    Args:
+        data: Dictionary data to format
+        format_type: Output format (json, text, list)
+
+    Returns:
+        Formatted data string
+    """
+    if format_type == "json":
+        return json.dumps(data, indent=2)
+    elif format_type == "text":
+        return "\n".join([f"{k}: {v}" for k, v in data.items()])
+    elif format_type == "list":
+        return "\n".join([f"- {k} = {v}" for k, v in data.items()])
+    else:
+        return "Error: Unknown format type"
+
+
+@mcp.tool()
+def get_linnanmaa_weather() -> str:
+    """
+    Fetch current weather from Linnanmaa Weather Station, Oulu, Finland
+
+    Uses the official University of Oulu campus weather station operated by
+    VTT Technical Research Centre and Vaisala Oyj since 1987.
+
+    Returns:
+        Real-time weather data from Linnanmaa including temperature, humidity,
+        pressure, wind speed/direction, precipitation, and more
+    """
+    try:
+        # Using approved Linnanmaa Weather Station API
+        # Location: University of Oulu (65.03°N, 25.48°E, 13m altitude)
+        url = "https://weather.willab.fi/weather.json"
+
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode())
+
+        result = f"""Weather at Linnanmaa Weather Station, Oulu
+(University of Oulu campus - VTT/Vaisala station)
+
+Temperature: {data.get('tempout', 'N/A')}°C
+Dew Point: {data.get('dew', 'N/A')}°C
+Wind Chill: {data.get('chill', 'N/A')}°C
+Humidity: {data.get('humout', 'N/A')}%
+Air Pressure: {data.get('press', 'N/A')} hPa
+Wind Speed: {data.get('wspeed', 'N/A')} m/s
+Wind Direction: {data.get('wdir', 'N/A')}° ({data.get('wdirtext', 'N/A')})
+Wind Gust: {data.get('wgust', 'N/A')} m/s
+Precipitation Rate: {data.get('rain', 'N/A')} mm/h
+Solar Radiation: {data.get('solarrad', 'N/A')} W/m²
+
+Coordinates: 65.03°N, 25.48°E (Altitude: 13m)
+Last Updated: {data.get('time', 'N/A')}"""
+
+        return result
+
+    except urllib.error.URLError as e:
+        return f"Error fetching weather data from Linnanmaa station: {str(e)}"
+    except Exception as e:
+        return f"Unexpected error: {str(e)}"
 
 
 if __name__ == "__main__":

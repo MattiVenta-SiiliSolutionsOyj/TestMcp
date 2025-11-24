@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+description: "Global development standards from CodeContext-MCP"
+---
+
+# Global Development Rules
+
+This project uses CodeContext-MCP server for organizational standards.
+
+**All rules are in CLAUDE.md at the project root.**
+
+For the latest rules, call `mcp__code-context__get_global_rules()` and update CLAUDE.md.

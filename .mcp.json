@@ -1,0 +1,20 @@
+{
+  "name": "tata-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server with tata tool using FastMCP",
+  "command": "python",
+  "args": ["server.py"],
+  "env": {},
+  "tools": [
+    {
+      "name": "tata",
+      "description": "Returns 'terve Maailma' greeting",
+      "parameters": {}
+    }
+  ],
+  "transport": {
+    "type": "sse",
+    "host": "0.0.0.0",
+    "port": 8000
+  }
+}

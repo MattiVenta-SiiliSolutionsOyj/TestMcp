@@ -68,13 +68,39 @@ def get_info(category: str) -> str:
     Returns:
         Information about the requested category
     """
+    tool_list = [
+        "tata",
+        "universal",
+        "calculate",
+        "get_info",
+        "list_items",
+        "format_data",
+        "get_linnanmaa_weather",
+        "allatools"
+    ]
     info = {
         "server": "FastMCP server running on Python with SSE transport",
-        "tools": "This server provides: tata, universal, calculate, get_info, list_items, and format_data tools",
-        "mcp": "Model Context Protocol - A protocol for communication between AI models and tools"
+        "tools": f"This server provides: {', '.join(tool_list)}",
+        "mcp": "Model Context Protocol - A protocol for communication between AI models and tools",
+        "allatools": ", ".join(tool_list)
     }
 
     return info.get(category.lower(), f"No information available for category: {category}")
+@mcp.tool()
+def allatools() -> str:
+    """
+    Returns a comma-separated list of all available tool names
+    """
+    return ", ".join([
+        "tata",
+        "universal",
+        "calculate",
+        "get_info",
+        "list_items",
+        "format_data",
+        "get_linnanmaa_weather",
+        "allatools"
+    ])
 
 
 @mcp.tool()

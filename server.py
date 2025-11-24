@@ -160,22 +160,27 @@ def get_linnanmaa_weather() -> str:
         with urllib.request.urlopen(url, timeout=10) as response:
             data = json.loads(response.read().decode())
 
+        # Convert wind direction to compass direction
+        wind_deg = data.get('winddir', 0)
+        directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+                      'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+        wind_compass = directions[round(wind_deg / 22.5) % 16]
+
         result = f"""Weather at Linnanmaa Weather Station, Oulu
 (University of Oulu campus - VTT/Vaisala station)
 
-Temperature: {data.get('tempout', 'N/A')}°C
-Dew Point: {data.get('dew', 'N/A')}°C
-Wind Chill: {data.get('chill', 'N/A')}°C
-Humidity: {data.get('humout', 'N/A')}%
-Air Pressure: {data.get('press', 'N/A')} hPa
-Wind Speed: {data.get('wspeed', 'N/A')} m/s
-Wind Direction: {data.get('wdir', 'N/A')}° ({data.get('wdirtext', 'N/A')})
-Wind Gust: {data.get('wgust', 'N/A')} m/s
-Precipitation Rate: {data.get('rain', 'N/A')} mm/h
+Temperature: {data.get('tempnow', 'N/A')}°C (Low: {data.get('templo', 'N/A')}°C, High: {data.get('temphi', 'N/A')}°C)
+Dew Point: {data.get('dewpoint', 'N/A')}°C
+Wind Chill: {data.get('windchill', 'N/A')}°C
+Humidity: {data.get('humidity', 'N/A')}%
+Air Pressure: {data.get('airpressure', 'N/A')} hPa
+Wind Speed: {data.get('windspeed', 'N/A')} m/s (Max: {data.get('windspeedmax', 'N/A')} m/s)
+Wind Direction: {wind_deg}° ({wind_compass})
+Precipitation: {data.get('precipitation1h', 'N/A')} mm (1h), {data.get('precipitation1d', 'N/A')} mm (24h)
 Solar Radiation: {data.get('solarrad', 'N/A')} W/m²
 
 Coordinates: 65.03°N, 25.48°E (Altitude: 13m)
-Last Updated: {data.get('time', 'N/A')}"""
+Last Updated: {data.get('timestamp', 'N/A')}"""
 
         return result
 

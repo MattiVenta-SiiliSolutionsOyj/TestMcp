@@ -7,8 +7,8 @@ set -e  # Exit on any error
 
 echo "🚀 Starting pre-deploy checks..."
 
-# Navigate to tata-server directory
-cd "$(dirname "$0")/tata-server"
+# Navigate to project root
+cd "$(dirname "$0")"
 
 echo "📦 Syncing dependencies..."
 uv sync

@@ -4,27 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a test MCP (Model Context Protocol) server with HTTP transport.
+This is a test MCP (Model Context Protocol) server using FastMCP with SSE transport.
 
 ### Commands
 
 **Install dependencies:**
 ```bash
-npm install
+uv sync
 ```
 
 **Start the server:**
 ```bash
-npm start
+./run.sh
 ```
 
-The server runs on `http://localhost:8000` with a `terve_maailma` tool that returns Finnish greetings.
+The server runs on `http://0.0.0.0:8000/sse` with a `tata` tool that returns Finnish greetings.
 
 ### Architecture
 
-- **server.js**: Main MCP server implementation with HTTP and stdio transports
-- **Tool**: `terve_maailma` - Simple greeting tool with optional name parameter
-- **Transports**: Supports both HTTP (port 8000) and stdio for flexibility
+- **server.py**: Main MCP server implementation using FastMCP with SSE transport
+- **Tool**: `tata` - Simple greeting tool that returns "terve Maailma"
+- **Transport**: SSE (Server-Sent Events) on port 8000
+- **Package Manager**: uv
 
 ---
 

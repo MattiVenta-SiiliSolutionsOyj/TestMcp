@@ -1,19 +1,20 @@
-# Test MCP Server
+# Tata MCP Server
 
-A simple Model Context Protocol (MCP) server with HTTP transport for testing purposes.
+A simple Model Context Protocol (MCP) server using FastMCP with SSE transport.
 
 ## Features
 
-- **Tool**: `terve_maailma` - Returns "Terve maailma!" (Hello world in Finnish)
-- **Transport**: HTTP on port 8000
+- **Tool**: `tata` - Returns "terve Maailma" (Hello World in Finnish)
+- **Transport**: SSE (Server-Sent Events) on port 8000
 - **Protocol**: MCP (Model Context Protocol)
+- **Framework**: FastMCP
 
 ## Setup
 
-Install dependencies:
+Install dependencies using uv:
 
 ```bash
-npm install
+uv sync
 ```
 
 ## Running the Server
@@ -21,49 +22,37 @@ npm install
 Start the server:
 
 ```bash
-npm start
+./run.sh
 ```
 
-The server will start on `http://localhost:8000`.
+Or directly with uv:
 
-## Testing the Tool
-
-The server supports both:
-1. **HTTP transport** on port 8000 (POST to `/mcp`)
-2. **stdio transport** for local MCP clients
-
-### Test with HTTP
-
-Check if server is running:
 ```bash
-curl http://localhost:8000
+uv run python server.py
 ```
 
-### Test with MCP Client
+The server will start on `http://0.0.0.0:8000/sse`.
 
-Configure your MCP client to connect to this server using stdio transport:
+## Pre-Deploy Checks
 
-```json
-{
-  "mcpServers": {
-    "test-server": {
-      "command": "node",
-      "args": ["server.js"],
-      "cwd": "/path/to/TestMcp"
-    }
-  }
-}
+Run pre-deployment validation:
+
+```bash
+./pre-deploy.sh
 ```
+
+This checks dependencies, Python syntax, and imports.
 
 ## Tool Details
 
-### `terve_maailma`
+### `tata`
 
 **Description**: A simple test tool that returns a Finnish greeting.
 
-**Parameters**:
-- `name` (optional string): Name to greet
+**Returns**: "terve Maailma"
 
-**Examples**:
-- Without parameter: Returns "Terve maailma!"
-- With name: Returns "Terve, [name]!"
+## Development
+
+- **Python Version**: 3.10+
+- **Dependencies**: fastmcp>=0.3.0, uvicorn[standard]>=0.24.0
+- **Package Manager**: uv
